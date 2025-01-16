@@ -330,7 +330,7 @@ const App = () => {
         onClick={() => setAdmin(!admin)}
         style={{ display: "block", marginTop: "20px", textAlign: 'center' }}
       >
-        لوحة الإدارة
+        {admin ? "الصفحة الرئيسية" : "لوحة الإدار"}
       </a>
 
       <div
