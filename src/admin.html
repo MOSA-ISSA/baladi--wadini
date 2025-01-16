@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="لوحة الإدارة الخاصة بإدارة البيانات والإجراءات للمسؤولين." />
+  <title>لوحة الإدارة</title>
+  <link rel="stylesheet" href="./Styles/stylesadmin.css" />
+  <style>
+    #admin-content {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>لوحة الإدارة</h2>
+    <input type="password" id="admin-password" placeholder="أدخل كلمة المرور" autocomplete="off" />
+    <button onclick="verifyPassword()">تسجيل الدخول</button>
+    <div class="notification" id="notification"></div>
+    <div id="admin-content">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم الهاتف</th>
+            <th>عدد التسجيلات</th>
+          </tr>
+        </thead>
+        <tbody id="admin-data"></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="./script/scriptadmin.js"></script>
+</body>
+
+</html>

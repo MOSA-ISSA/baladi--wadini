@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مبادرة بلدي وديني</title>
+  <link rel="icon" type="png" href="./img/logo.png" />
+  <link rel="stylesheet" href="./Styles/styles.css" />
+</head>
+
+<body>
+  <div class="header">
+    <img src="img/logo.png" alt="شعار المبادرة" />
+    <h1>مبادرة بلدي وديني</h1>
+  </div>
+  <div class="container">
+    <div class="input-container" id="registration-form" style="display: block;">
+      <input type="tel" id="phone-number" placeholder="أدخل رقم هاتفك" pattern="[0-9]{10,}"
+        title="يجب أن يحتوي رقم الهاتف على 10 أرقام على الأقل" required />
+      <button onclick="registerPhoneNumber()">تسجيل</button>
+    </div>
+    <div class="message" id="thank-you-message" style="display: none">
+      شكرًا لتسجيلك! لقد حصلت على:
+    </div>
+    <div class="points" id="pointsDisplay" style="display: none">0 نقطة</div>
+    <div class="user-phone-number" id="user-phone-number" style="display: none">
+      رقم هاتفك: <span id="user-phone">غير مسجل</span>
+    </div>
+    <div class="instagram-link" id="instagram-link" style="display: none">
+      <a href="https://www.instagram.com/good.traces?igsh=MWVqczd3NGQyYmx3ZA==" target="_blank">
+        <img src="img/instagram-logo.png" alt="Instagram" />تابعنا على
+        إنستجرام
+      </a>
+    </div>
+    <div class="notification" id="notification"></div>
+    <a href="admin.html" style="display: block; margin-top: 20px">لوحة الإدارة</a>
+  </div>
+  <script src="./script/script.js"></script>
+</body>
+
+</html>
