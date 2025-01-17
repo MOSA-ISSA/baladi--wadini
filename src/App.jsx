@@ -85,7 +85,6 @@ const App = () => {
 
   const getTime = () => {
     const now = new Date();
-    let result = "";
     const start = (time) => {
       if (now.getHours() === time.time.start.h) {
         return now.getMinutes() >= time.time.start.m
@@ -102,18 +101,13 @@ const App = () => {
       }
     }
 
-    times.forEach((time) => {
+    const foundTime = times.find((time) => {
       if (start(time) && end(time)) {
         console.log("time.name", time.name);
-        result = time.name;
         return time.name;
-      } else {
-        // console.log("لا يوجد صلاة في هذه الوقت");
-        result = "لا يوجد صلاة في هذه الوقت";
-        return "لا يوجد صلاة في هذه الوقت";
       }
     })
-    return result;
+    return foundTime?.name || "لا يوجد صلاة في هذه الوقت";
   };
 
   const updatePointsBasedOnTime = () => {
@@ -215,6 +209,7 @@ const App = () => {
     }
     console.log("isWithinAllowedTime", !!isWithinAllowedTime());
     console.log("canGetPoint", !!canGetPoint());
+    console.log("getTime", getTime());
   }, []);
 
   useEffect(() => {

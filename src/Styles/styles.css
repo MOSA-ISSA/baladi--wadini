@@ -40,8 +40,8 @@ body {
   padding: 25px;
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 500px;
+  width: 90dvw;
+  max-width: 300px;
   margin-top: 20px;
   transition: transform 0.3s ease;
 }
@@ -69,9 +69,9 @@ body {
 
 .input-container input {
   padding: 15px;
-  width: 90%;
+  width: 80dvw;
   align-self: center;
-  max-width: 350px;
+  max-width: 250px;
   margin-bottom: 15px;
   border: 2px solid #4caf50;
   border-radius: 15px;
