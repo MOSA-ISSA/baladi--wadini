@@ -23,6 +23,11 @@ const App = () => {
   const [canGetUser, setGetUser] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [toChangeNumber, setChange] = useState({
+    state: false,
+    number: "",
+  });
+  const [changingNumber, setChangingNumber] = useState('');
   const [lastVisitTime, setLastVisitTime] = useState(
     localStorage.getItem("lastVisitTime") || null
   );
@@ -143,7 +148,7 @@ const App = () => {
 
   function registerPhoneNumber(localNumber) {
 
-    if (!isWithinAllowedTime()) {
+    if (false) {//!isWithinAllowedTime()
       showNotification("التسجيل مسموح فقط خلال اوقات الصلاة.", 1000 * 60, "red");
       return;
     }
@@ -200,6 +205,14 @@ const App = () => {
     }
   }
 
+  const changeUserNumber = (number) => {
+    if (number.length < 10) {
+      setChangingNumber(number);
+    }
+  };
+
+  const save =()=>{}
+
   useEffect(() => {
     const storedPhoneNumber = localStorage.getItem("phoneNumber");
     console.log("storedPhoneNumber: ", storedPhoneNumber || "no number");
@@ -244,6 +257,7 @@ const App = () => {
       </div>
 
       {
+        // --------------------------
         !admin ?
           <div className="container">
 
@@ -259,7 +273,7 @@ const App = () => {
                   <div className="user-phone-number" id="user-phone-number">
                     رقم هاتفك: {user.phoneNumber}
                   </div>
-                  <div class="instagram-link" id="instagram-link">
+                  <div className="instagram-link" id="instagram-link">
                     <a href="https://www.instagram.com/good.traces?igsh=MWVqczd3NGQyYmx3ZA==" target="_blank">
                       <img src={instagramImg} alt="Instagram" />تابعنا على
                       إنستجرام
@@ -298,6 +312,7 @@ const App = () => {
                   />
                   <button onClick={verifyPassword}>تسجيل الدخول</button>
                 </div>
+                // --------------------------
                 :
                 <div id="admin-content">
                   <table>
@@ -310,7 +325,27 @@ const App = () => {
                     <tbody>
                       {users.map((user) => (
                         <tr key={user.phoneNumber}>
-                          <td>{user.phoneNumber}</td>
+                          {
+                            toChangeNumber.state && toChangeNumber.phoneNumber === user.phoneNumber ?
+                              <>
+                                <input
+                                  type="tel"
+                                  value={changingNumber}
+                                  onChange={(e) => { changeUserNumber(e.target.value) }}
+                                />
+                                <button>save</button>
+                              </>
+                              :
+                              <td
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setChange({ state: true, phoneNumber: user.phoneNumber })
+                                  setChangingNumber(user.phoneNumber)
+                                  localStorage.setItem("changePhoneNumber", user.phoneNumber);
+                                }}>
+                                {user.phoneNumber}
+                              </td>
+                          }
                           <td>{user.points.length}</td>
                         </tr>
                       ))}
