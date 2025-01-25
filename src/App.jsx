@@ -3,6 +3,7 @@ import logo from "./img/logo.png";
 import instagramImg from "./img/instagram-logo.png";
 
 const apiUrl = "https://baladi-wadini.vercel.app";
+// const apiUrl = "http://localhost:3000";
 const times = [
   { name: "فجر", time: { start: { h: 5, m: 0 }, end: { h: 6, m: 0 } } },
   { name: "ظهر", time: { start: { h: 11, m: 30 }, end: { h: 12, m: 30 } } },
@@ -27,7 +28,13 @@ const App = () => {
     state: false,
     number: "",
   });
+  const [toChangePoint, setChangePoint] = useState({
+    state: false,
+    Point: 0,
+    phoneNumber: "",
+  });
   const [changingNumber, setChangingNumber] = useState('');
+  const [changingPoint, setChangingPoint] = useState(0);
   const [lastVisitTime, setLastVisitTime] = useState(
     localStorage.getItem("lastVisitTime") || null
   );
@@ -127,7 +134,6 @@ const App = () => {
         .then((response) => response.json())
         .then((res) => {
           console.log("⚙️⚙️⚙️", res);
-
           if (res.success) {
             setPoints(res.points);
             localStorage.setItem("points", res.points);
@@ -148,7 +154,7 @@ const App = () => {
 
   function registerPhoneNumber(localNumber) {
 
-    if (false) {//!isWithinAllowedTime()
+    if (!isWithinAllowedTime()) {
       showNotification("التسجيل مسموح فقط خلال اوقات الصلاة.", 1000 * 60, "red");
       return;
     }
@@ -206,18 +212,127 @@ const App = () => {
   }
 
   const changeUserNumber = (number) => {
-    if (number.length < 10) {
+    const isValidNumber = /^[0-9]*$/.test(number);
+    if (number.length <= 10 && isValidNumber) {
       setChangingNumber(number);
     }
   };
 
-  const save =()=>{}
+  const save = () => {
+    if (changingNumber.length !== 10) {
+      showNotification("يرجى إدخال رقم هاتف صالح!", 3000, "red");
+      return;
+    }
+    const oldNumber = localStorage.getItem("oldNumber");
+    console.log("oldNumber: ", oldNumber, "newNumber: ", changingNumber);
+
+    setLoading(true);
+    fetch(`${apiUrl}/updateNumber`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phoneNumber: oldNumber, newPhoneNumber: changingNumber }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("res: ", res);
+        if (res.success) {
+          setUsers(res.data);
+          setChange({ state: false, number: "" });
+          showNotification("تم التعديل بنجاح!", 3000, "green");
+        } else {
+          showNotification(res.message, 3000, "red"); // Show error message
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showNotification("خطأ في الاتصال بالخادم!", 3000 * 60, "red");
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const removeUser = (phoneNumber) => {
+    setLoading(true);
+    fetch(`${apiUrl}/deleteUser`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phoneNumber: phoneNumber }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("res: ", res);
+        if (res.success) {
+          setUsers(res.data);
+          showNotification("تم حذف المستخدم بنجاح!", 3000, "green");
+        } else {
+          showNotification(res.message, 3000, "red"); // Show error message
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showNotification("خطاء في الاتصال بالخادم!", 3000 * 60, "red");
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const changeUserPoint = (number) => {
+    var numberTest = parseInt(number);
+    if ((typeof numberTest === "number" || number === '') && numberTest >= 0) {
+      setChangingPoint(number);
+    }
+  }
+
+  const savePoint = (phoneNumber) => {
+    const oldPoint = localStorage.getItem("oldPoint");
+    const valueChanged = changingPoint - oldPoint;
+    console.log("oldPoint: ", oldPoint, "changingPoint: ", changingPoint, "valueChanged: ", valueChanged);
+
+    setLoading(true);
+    fetch(`${apiUrl}/updatePoints`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phoneNumber: phoneNumber, points: valueChanged }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("res: ", res);
+        if (res.success) {
+          setUsers(res.data);
+          setChangePoint({
+            state: false,
+            Point: 0,
+            phoneNumber: "",
+          });
+          showNotification("تم التعديل بنجاح!", 3000, "green");
+        } else {
+          showNotification(res.message, 3000, "red"); // Show error message
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showNotification("خطاء في الاتصال بالخادم!", 3000 * 60, "red");
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const onchangePhoneNumber = (number) => {
+    const isValidNumber = /^[0-9]*$/.test(number); // Allow only digits
+
+    if (isValidNumber) {
+      setPhoneNumber(number); // Update state only if the input is valid
+    } else {
+      console.log("Invalid input: only numbers are allowed.");
+    }
+  };
+
+
 
   useEffect(() => {
     const storedPhoneNumber = localStorage.getItem("phoneNumber");
     console.log("storedPhoneNumber: ", storedPhoneNumber || "no number");
-
-    if (storedPhoneNumber) {
+    if (!isWithinAllowedTime()) {
+      console.log("🟥🔄️🟥");
+      localStorage.clear();
+    } else if (storedPhoneNumber) {
       registerPhoneNumber(storedPhoneNumber);
     }
     console.log("isWithinAllowedTime", !!isWithinAllowedTime());
@@ -285,7 +400,7 @@ const App = () => {
                   <input
                     type="tel"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={(e) => onchangePhoneNumber(e.target.value)}
                     placeholder="أدخل رقم هاتفك"
                     pattern="[0-9]{10}"
                     title="يجب أن يحتوي رقم الهاتف على 10 أرقام"
@@ -333,7 +448,8 @@ const App = () => {
                                   value={changingNumber}
                                   onChange={(e) => { changeUserNumber(e.target.value) }}
                                 />
-                                <button>save</button>
+                                <button onClick={save}>save</button>
+                                <button onClick={() => setChange({ state: false, number: "" })}>cancel</button>
                               </>
                               :
                               <td
@@ -341,12 +457,30 @@ const App = () => {
                                 onClick={() => {
                                   setChange({ state: true, phoneNumber: user.phoneNumber })
                                   setChangingNumber(user.phoneNumber)
-                                  localStorage.setItem("changePhoneNumber", user.phoneNumber);
+                                  localStorage.setItem("oldNumber", user.phoneNumber);
                                 }}>
                                 {user.phoneNumber}
                               </td>
                           }
-                          <td>{user.points.length}</td>
+                          {
+                            toChangePoint.state && toChangePoint.phoneNumber === user.phoneNumber ?
+                              <>
+                                <input
+                                  type="number"
+                                  value={changingPoint}
+                                  onChange={(e) => { changeUserPoint(e.target.value) }}
+                                />
+                                <button onClick={() => savePoint(user.phoneNumber)}>save</button>
+                                <button onClick={() => setChangePoint({ state: false, phoneNumber: "", point: 0 })}>cancel</button>
+                              </>
+                              :
+                              <td onClick={() => {
+                                setChangePoint({ state: true, phoneNumber: user.phoneNumber, point: user.points.length })
+                                setChangingPoint(user.points.length)
+                                localStorage.setItem("oldPoint", user.points.length);
+                              }}>{user.points.length}</td>
+                          }
+                          <td onClick={() => removeUser(user.phoneNumber)} style={{ cursor: 'pointer', }}>❌</td>
                         </tr>
                       ))}
                     </tbody>
