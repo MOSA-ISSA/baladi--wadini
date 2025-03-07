@@ -5,11 +5,11 @@ import instagramImg from "./img/instagram-logo.png";
 const apiUrl = "https://baladi-wadini.vercel.app";
 // const apiUrl = "http://localhost:3000";
 const times = [
-  { name: "فجر", time: { start: { h: 5, m: 0 }, end: { h: 6, m: 0 } } },
-  { name: "ظهر", time: { start: { h: 11, m: 30 }, end: { h: 12, m: 30 } } },
-  { name: "عصر", time: { start: { h: 14, m: 30 }, end: { h: 15, m: 30 } } },
-  { name: "مغرب", time: { start: { h: 17, m: 20 }, end: { h: 18, m: 20 } } },
-  { name: "عشاء", time: { start: { h: 18, m: 40 }, end: { h: 19, m: 20 } } },
+  { name: "فجر", time: { start: { h: 4, m: 0 }, end: { h: 5, m: 0 } } },
+  { name: "ظهر", time: { start: { h: 11, m: 30 }, end: { h: 13, m: 0 } } },
+  { name: "عصر", time: { start: { h: 15, m: 0 }, end: { h: 16, m: 0 } } },
+  { name: "مغرب", time: { start: { h: 17, m: 40 }, end: { h: 18, m: 20 } } },
+  { name: "عشاء", time: { start: { h: 19, m: 0 }, end: { h: 19, m: 30 } } },
   // { name: "test", time: { start: { h: 0, m: 15 }, end: { h: 1, m: 20 } } },
   // { name: "test1", time: { start: { h: 1, m: 22 }, end: { h: 2, m: 20 } } },
 ]
